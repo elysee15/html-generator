@@ -29,22 +29,21 @@
             background-color: transparent;
             margin: 2px;
         }
+        a{
+            cursor: pointer;
+        }
     </style>
 </head>
-<body class="flex container">
+<body class="container-fluid">
     <div class=" col-xl-12 col-md-12 col-lg-12" style="position: relative;">
-        <select class="nice-select wide" id="chapter">
-            <option data-display="Choisissez le chapitre"></option>
-            <option value="1">Chapitre 1</option>
-            <option value="2">Chapitre 2</option>
-            <option value="3">Chapitre 3</option>
-            <option value="4">Chapitre 4</option>
-            <option value="5">Chapitre 5</option>
-            <option value="6">Chapitre 6</option>
-            <option value="7">Chapitre 7</option>
-        </select>
-        <button class="btn btn-success mt-4 mb-4">Génerer</button>
-        <div class="mt-5 selectedItems">
+        <div class="d-flex  col-sm-4 col-lg-4 col-xl-4">
+            <select class="form-control" id="chapter">
+                <option hidden>Choisir le chapitre</option>
+            </select>
+        </div>
+        <button class="btn btn-success mt-4 mb-4" disabled>Génerer</button>
+
+        <div class="mt-5 selectedItems d-flex justify-content-center">
         </div>
     </div>
 
@@ -54,36 +53,49 @@
    <script src="./js/jquery.nice-select.min.js"></script>
    <script src="./js/FileSaver.js"></script>
    <script>
-
         let selectedParagraphIndex;
 
        $(document).ready(function() {
-
             let selectedParagraph = [];
             let myDiv;
+            let currentElIndex;
 
-            $('select').niceSelect();
             $('#chapter').change((e) => {
-                $("div").last().remove();
+                $("p").last().remove();
                 $("h1").last().remove();
-
+                
+                $('button').prop('disabled', false)
+                currentElIndex = e.target.value;
+                console.log(currentElIndex)
                 // insertion des paragraphes sélectionnés dans le tableau
                 let txt = $('#chapter option:selected').text();
                 selectedParagraph.push(e.target.value);
-                btn = document.createElement("button");
-                btn.appendChild(document.createTextNode(txt));
-                $(".selectedItems").append(btn);
+                a = createElement("a", txt)
+                    .addClass("mr-2")
+                    .attribute('id', `${e.target.value}`);
+                $(".selectedItems").append(a);
+
+                $("a").click((e) => {
+                    $("p").last().remove();
+                    $("h1").last().remove();
+                    createElement("h1", chapterValue[e.target.id-1])
+                        .addClass('text-center');
+                    createP(getParagraph(e.target.id))
+                        .addClass('container-fluid');
+                });
+                
                 $('div.selectedItems > button').addClass('selected');
                 createElement("h1", chapterValue[e.target.value-1])
-                createDiv(getParagraph(e.target.value)).addClass('container-fluid');
+                    .addClass('text-center')
+                createP(getParagraph(e.target.value))
+                    .addClass('container-fluid');
             });
 
-            $("button.btn").click((e) => {
-                saveStaticDataToFile(e.target.value)
+            $("button.btn").click(() => {
+                console.log(currentElIndex)
+                saveStaticDataToFile(currentElIndex);
             })
        });
-
-       
        
        function saveStaticDataToFile(e) {
             let blob = new Blob([getParagraph(e)],{ type: "text/html;charset=utf-8" });
@@ -95,7 +107,6 @@
             return paragraph[selectedParagraphIndex-1];
         }
 
-    
    </script>
 </body>
 </html>
