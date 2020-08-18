@@ -5,10 +5,10 @@
     <title>HTML GENERATOR</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="./css/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <style>
         body{
-            width: 1000px;
             margin: 0 auto;
             min-height: 100vh;
             padding: 2rem 0;
@@ -31,7 +31,7 @@
         }
     </style>
 </head>
-<body class="flex row mx-auto">
+<body class="flex container">
     <div class=" col-xl-12 col-md-12 col-lg-12" style="position: relative;">
         <select class="nice-select wide" id="chapter">
             <option data-display="Choisissez le chapitre"></option>
@@ -75,7 +75,7 @@
                 $(".selectedItems").append(btn);
                 $('div.selectedItems > button').addClass('selected');
                 createElement("h1", chapterValue[e.target.value-1])
-                createDiv(getParagraph(e.target.value));
+                createDiv(getParagraph(e.target.value)).addClass('container-fluid');
             });
 
             $("button.btn").click((e) => {
