@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML GENERATOR</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+
+    <style>
+        body{
+            width: 1000px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 2rem 0;
+            color: #445870 !important;
+        }
+        button.selected{
+            border: 1px solid #e0e7ee;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: normal;
+            height: 42px;
+            line-height: 40px;
+            outline: none;
+            box-sizing: border-box;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #445870;
+            background-color: transparent;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body class="flex row mx-auto">
+    <div class=" col-xl-12 col-md-12 col-lg-12" style="position: relative;">
+        <select class="nice-select wide" id="chapter">
+            <option data-display="Choisissez le chapitre"></option>
+            <option value="1">Chapitre 1</option>
+            <option value="2">Chapitre 2</option>
+            <option value="3">Chapitre 3</option>
+            <option value="4">Chapitre 4</option>
+            <option value="5">Chapitre 5</option>
+            <option value="6">Chapitre 6</option>
+            <option value="7">Chapitre 7</option>
+        </select>
+        <button class="btn btn-success mt-4 mb-4">Génerer</button>
+        <div class="mt-5 selectedItems">
+        </div>
+    </div>
+
+   <script src="./js/p5.min.js"></script>
+   <script src="./sketch.js"></script>
+   <script src="./js/jquery-3.5.1.min.js"></script>
+   <script src="./js/jquery.nice-select.min.js"></script>
+   <script src="./js/FileSaver.js"></script>
+   <script>
+
+        let selectedParagraphIndex;
+
+       $(document).ready(function() {
+
+            let selectedParagraph = [];
+            let myDiv;
+
+            $('select').niceSelect();
+            $('#chapter').change((e) => {
+                $("div").last().remove();
+                $("h1").last().remove();
+
+                // insertion des paragraphes sélectionnés dans le tableau
+                let txt = $('#chapter option:selected').text();
+                selectedParagraph.push(e.target.value);
+                btn = document.createElement("button");
+                btn.appendChild(document.createTextNode(txt));
+                $(".selectedItems").append(btn);
+                $('div.selectedItems > button').addClass('selected');
+                createElement("h1", chapterValue[e.target.value-1])
+                createDiv(getParagraph(e.target.value));
+            });
+
+            $("button.btn").click((e) => {
+                saveStaticDataToFile(e.target.value)
+            })
+       });
+
+       
+       
+       function saveStaticDataToFile(e) {
+            let blob = new Blob([getParagraph(e)],{ type: "text/html;charset=utf-8" });
+            selectedParagraphIndex = $('#chapter option:selected').val();
+            saveAs(blob, `paragraph${selectedParagraphIndex}.html`);
+        }
+
+        function getParagraph(selectedParagraphIndex){
+            return paragraph[selectedParagraphIndex-1];
+        }
+
+    
+   </script>
+</body>
+</html>
